@@ -43,7 +43,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: docker-compose up -d
       - run: npm ci
       - run: npm run test
 
