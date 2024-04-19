@@ -22,3 +22,8 @@ tags
 
 # OS X
 .DS_Store
+
+# package / npm
+dist
+package
+*.tgz
