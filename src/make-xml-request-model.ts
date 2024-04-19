@@ -8,9 +8,9 @@ export const makeXmlRequestModel = (options: SmsOptions): string => {
       CLIENT: options.username,
       PW: options.password,
       MSGLST: {
-        MSG: options.receivers.map((rcv, i) => {
+        MSG: options.receivers.map((rcv, index) => {
           return {
-            ID: i + 1,
+            ID: index + 1,
             OP: options.operation || 1,
             TEXT: options.message,
             SND: options.sender,
@@ -22,10 +22,10 @@ export const makeXmlRequestModel = (options: SmsOptions): string => {
   };
 
   if (options.deliveryTime) {
-    var deliveryTimeStamp = dateToTimestamp(options.deliveryTime);
-    requestModel.SESSION.MSGLST.MSG.forEach(function (m) {
+    const deliveryTimeStamp = dateToTimestamp(options.deliveryTime);
+    for (const m of requestModel.SESSION.MSGLST.MSG) {
       m.DELIVERYTIME = deliveryTimeStamp;
-    });
+    }
   }
 
   const xml2jsBuilder = new Builder({});

@@ -1,0 +1,60 @@
+name: CI
+
+env:
+  NODE_OPTIONS: --max_old_space_size=4096
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  prettier:
+    runs-on: big-runner
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run prettier:check
+
+  build:
+    needs: [prettier]
+    runs-on: big-runner
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run build
+
+  test:
+    needs: [prettier]
+    runs-on: big-runner
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: docker-compose up -d
+      - run: npm ci
+      - run: npm run test
+
+  lint:
+    needs: [prettier]
+    runs-on: big-runner
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run lint

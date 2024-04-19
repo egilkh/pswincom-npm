@@ -28,6 +28,7 @@ describe('sendSms', () => {
       formData: async () => new FormData(),
       type: 'basic',
       url: '',
+      // eslint-disable-next-line unicorn/no-null -- Required for Response
       body: null,
       bodyUsed: false,
 
@@ -41,7 +42,7 @@ describe('sendSms', () => {
           <LOGON>FAIL</LOGON>
         </SESSION>
       `,
-    })
+    }),
   );
 
   it('should fail to send message with no credentials', async () => {
@@ -278,7 +279,7 @@ describe('makeDeliveryResponse', () => {
     const deliveryResponse = await makeDeliveryResponse(xml);
 
     if (Array.isArray(deliveryResponse.MSGLST?.MSG)) {
-      throw new Error('Expected single message');
+      throw new TypeError('Expected single message');
     }
 
     equal(deliveryResponse.MSGLST?.MSG?.ID, '1');
@@ -305,7 +306,7 @@ describe('makeDeliveryResponse', () => {
     const deliveryResponse = await makeDeliveryResponse(xml);
 
     if (!Array.isArray(deliveryResponse.MSGLST?.MSG)) {
-      throw new Error('Expected single message');
+      throw new TypeError('Expected single message');
     }
 
     equal(deliveryResponse.MSGLST?.MSG?.[0].ID, '1');

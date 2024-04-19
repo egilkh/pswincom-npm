@@ -7,7 +7,10 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "test": "tsx tests/index.spec.ts"
+    "test": "tsx tests/index.spec.ts",
+    "lint": "eslint 'src/**/*.ts' 'tests/**/*.ts'",
+    "prettier:check": "prettier --check src/**/*",
+    "prettier:write": "prettier --write src/**/*"
   },
   "repository": {
     "type": "git",
@@ -44,12 +47,31 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@faker-js/faker": "^8.4.0",
     "@tsconfig/node18": "^18.2.2",
-    "@types/node": "^18.19.14",
+    "@types/node": "^18.19.31",
     "@types/xml2js": "^0.4.14",
+    "eslint": "^8.57.0",
+    "eslint-plugin-unicorn": "^52.0.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4",
     "rimraf": "^5.0.5",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.7.0"
+  },
+  "engines": {
+    "node": "^18"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "bracketSameLine": true,
+    "arrowParens": "always",
+    "plugins": [
+      "prettier-plugin-organize-imports"
+    ]
   }
 }

@@ -106,7 +106,7 @@ export type DeliveryResult = {
 export type DeliveryResults = DeliveryResult[];
 
 export type SmsResult = {
-  logon: string | null;
+  logon?: string;
   receivers: Record<string, XmlResponseMessageStatus>;
   refs: Record<string, string>;
 };

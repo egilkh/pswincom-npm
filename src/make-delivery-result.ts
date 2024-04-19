@@ -1,7 +1,7 @@
 import { DeliveryResult, DeliveryResults, XmlDeliveryResponse } from './types';
 
 export const makeDeliveryResult = (
-  xmlResponse: XmlDeliveryResponse
+  xmlResponse: XmlDeliveryResponse,
 ): DeliveryResults => {
   if (!xmlResponse.MSGLST?.MSG) {
     return [];
@@ -20,15 +20,15 @@ export const makeDeliveryResult = (
   }
 
   if (Array.isArray(xmlResponse.MSGLST.MSG)) {
-    xmlResponse.MSGLST.MSG.forEach((msg) => {
+    for (const message of xmlResponse.MSGLST.MSG) {
       results.push({
-        id: msg.ID,
-        ref: msg.REF,
-        receiver: msg.RCV,
-        state: msg.STATE,
-        deliveryTime: msg.DELIVERYTIME,
+        id: message.ID,
+        ref: message.REF,
+        receiver: message.RCV,
+        state: message.STATE,
+        deliveryTime: message.DELIVERYTIME,
       });
-    });
+    }
   }
 
   return results;
