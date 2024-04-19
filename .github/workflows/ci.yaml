@@ -12,7 +12,7 @@ on:
 
 jobs:
   prettier:
-    runs-on: big-runner
+    runs-on: ubuntu
 
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
 
   build:
     needs: [prettier]
-    runs-on: big-runner
+    runs-on: ubuntu
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
 
   test:
     needs: [prettier]
-    runs-on: big-runner
+    runs-on: ubuntu
 
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +49,7 @@ jobs:
 
   lint:
     needs: [prettier]
-    runs-on: big-runner
+    runs-on: ubuntu
 
     steps:
       - uses: actions/checkout@v4
