@@ -6,11 +6,14 @@ import { dateToTimestamp } from '../src/date-to-timestamp';
 import { makeSmsResult } from '../src/make-sms-result';
 import { makeXmlRequestModel } from '../src/make-xml-request-model';
 import {
+  DeliveryMessageState,
   MessageOperation,
   SmsOptions,
+  XmlDeliveryResponse,
   XmlResponseLoginStatus,
-  XmlResponseMessageStatus,
+  XmlResponseMessageStatus
 } from '../src/types';
+import { makeDeliveryResult } from '../src/make-delivery-result';
 
 // Run tests as if we are in UTC to avoid issues with timezones
 process.env.TZ = 'UTC';
@@ -212,6 +215,30 @@ describe('dateToTimestamp', () => {
 
     equal(actual, expectation);
   });
+
+  it('should format correctly with double digit month', () => {
+    const date = new Date('2021-11-01T12:00:00.000Z');
+    const actual = dateToTimestamp(date);
+    const expectation = '202111011200';
+
+    equal(actual, expectation);
+  });
+
+  it('should format correctly with double digit day', () => {
+    const date = new Date('2021-01-11T12:00:00.000Z');
+    const actual = dateToTimestamp(date);
+    const expectation = '202101111200';
+
+    equal(actual, expectation);
+  });
+
+  it('should format correctly on last month of year', () => {
+    const date = new Date('2021-12-11T12:00:00.000Z');
+    const actual = dateToTimestamp(date);
+    const expectation = '202112111200';
+
+    equal(actual, expectation);
+  });
 });
 
 describe('makeSmsResponse', () => {
@@ -317,11 +344,100 @@ describe('makeDeliveryResponse', () => {
 });
 
 describe('makeDeliveryResult', () => {
+  it('should return empty if no message', () => {
+    const xmlResponse = {};
+
+    const result = makeDeliveryResult(xmlResponse);
+    
+    equal(result.length, 0);
+  });
+
   it('should create for one', () => {
-    throw new Error('Not implemented');
+    const id = faker.string.uuid();
+    const reference = faker.string.alphanumeric(10);
+    const receiver = faker.phone.number();
+    const state = DeliveryMessageState.DELIVRD;
+    const deliveryTime = faker.string.numeric(12);
+
+    const xlmResponse: XmlDeliveryResponse = {
+      MSGLST: {
+        MSG: {
+          ID: id,
+          REF: reference,
+          RCV: receiver,
+          STATE: state,
+          DELIVERYTIME: deliveryTime
+        }
+      }
+    };
+    
+    const result = makeDeliveryResult(xlmResponse);
+    
+    equal(result.length, 1);
+    deepEqual(result[0], {
+      id,
+      ref: reference,
+      receiver,
+      state,
+      deliveryTime
+    });
   });
 
   it('should create for multiple', () => {
-    throw new Error('Not implemented');
+    const messages = [
+      {
+        ID: faker.string.uuid(),
+        REF: faker.string.alphanumeric(10),
+        RCV: faker.phone.number(),
+        STATE: DeliveryMessageState.BARREDA,
+        DELIVERYTIME: faker.string.numeric(12)
+      },
+      {
+        ID: faker.string.uuid(),
+        REF: faker.string.alphanumeric(10),
+        RCV: faker.phone.number(),
+        STATE: DeliveryMessageState.FAILED,
+        DELIVERYTIME: faker.string.numeric(12)
+      },
+      {
+        ID: faker.string.uuid(),
+        REF: faker.string.alphanumeric(10),
+        RCV: faker.phone.number(),
+        STATE: DeliveryMessageState.DELIVRD,
+        DELIVERYTIME: faker.string.numeric(12)
+      },
+      {
+        ID: faker.string.uuid(),
+        REF: faker.string.alphanumeric(10),
+        RCV: faker.phone.number(),
+        STATE: DeliveryMessageState.DELIVRD,
+        DELIVERYTIME: faker.string.numeric(12)
+      },
+      {
+        ID: faker.string.uuid(),
+        REF: faker.string.alphanumeric(10),
+        RCV: faker.phone.number(),
+        STATE: DeliveryMessageState.DELETED,
+        DELIVERYTIME: faker.string.numeric(12)
+      },
+
+    ];
+    const xmlResponse: XmlDeliveryResponse = {
+      MSGLST: {
+        MSG: messages,
+      }
+    };
+    const expectedResult = messages.map((message) => ({
+      id: message.ID,
+      ref: message.REF,
+      receiver: message.RCV,
+      state: message.STATE,
+      deliveryTime: message.DELIVERYTIME
+    }));
+
+    const result = makeDeliveryResult(xmlResponse);
+
+    equal(result.length, 5);
+    deepEqual(result, expectedResult);
   });
 });
