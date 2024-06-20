@@ -54,7 +54,7 @@ export type XmlResponseModel = {
   };
 };
 
-enum DeliveryMessageState {
+export enum DeliveryMessageState {
   // Message was successfully delivered to destination.
   // Premium messages: The receiver number is charged, SMS delivered.
   DELIVRD = 'DELIVRD',
