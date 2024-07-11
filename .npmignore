@@ -2,3 +2,7 @@ src
 tests
 tsconfig.json
 .nvmrc
+.github
+.vscode
+*.tgz
+.eslintrc.cjs
