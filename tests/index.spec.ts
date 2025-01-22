@@ -34,7 +34,9 @@ describe('sendSms', () => {
       // eslint-disable-next-line unicorn/no-null -- Required for Response
       body: null,
       bodyUsed: false,
-
+      bytes(): Promise<Uint8Array> {
+        return Promise.resolve(new Uint8Array());
+      },
       blob: async () => new Blob(),
       json: async () => ({}),
       clone: () => new Response(),
