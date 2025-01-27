@@ -13,3 +13,8 @@ Node.js module for sending SMS messages through LINK Mobility / PSWinCom SMS Gat
 ## Usage
 
 The module exposes a single function called `sendSms`.
+
+## Release
+
+The release version is generated automatically via Semantic Release:
+https://github.com/semantic-release/semantic-release
